@@ -1,40 +1,17 @@
-import { RecoilRoot, useRecoilValue, useSetRecoilState } from "recoil";
+import { RecoilRoot, useRecoilValue } from "recoil";
 import { meAtom, notificationsAtom } from "./store/atoms/notifications.jsx";
-import { useEffect } from "react";
-import axios from "axios";
 
-// ✅ Wrapper to ensure RecoilRoot is the top-level component
-function AppWrapper() {
+
+function App() {
     return (
         <RecoilRoot>
-            <App />
+            <TopBar/>
         </RecoilRoot>
-    );
+    )
+
 }
 
-// ✅ Actual app with Recoil hooks
-function App() {
-    const setNotifications = useSetRecoilState(notificationsAtom);
 
-    useEffect(() => {
-        const fetchNotifications = async () => {
-            try {
-                const response = await axios.get("http://localhost:3000/"); // Use correct port
-                setNotifications(response.data);
-            } catch (error) {
-                console.error("Failed to fetch notifications:", error);
-            }
-        };
-
-        fetchNotifications();
-        const interval = setInterval(fetchNotifications, 5000);
-        return () => clearInterval(interval);
-    }, [setNotifications]);
-
-    return <TopBar />;
-}
-
-// ✅ TopBar using Recoil state
 function TopBar() {
     const notifications = useRecoilValue(notificationsAtom);
     const me = useRecoilValue(meAtom);
@@ -59,4 +36,4 @@ function TopBar() {
     );
 }
 
-export default AppWrapper;
+export default App;
